@@ -60,7 +60,7 @@ tbody tr{border-bottom:1px solid #f9fafb;transition:background .1s}
 tbody td{padding:8px 10px;color:#374151}
 .rank{font-weight:700;color:#d1d5db;font-size:12px}
 .drvid{font-weight:700;color:#111;font-family:monospace;font-size:13px}
-.pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
 .pill-r{background:#fef2f2;color:#b91c1c}
 .pill-b{background:#eff6ff;color:#1d4ed8}
 .pill-g{background:#f0fdf4;color:#166534}
@@ -68,47 +68,67 @@ tbody td{padding:8px 10px;color:#374151}
 .empty{text-align:center;color:#9ca3af;font-size:14px;padding:2.5rem 0}
 .last-updated{font-size:11px;color:#9ca3af;margin-left:auto}
 
-/* ── MODAL ── */
+/* ── LEVEL 1 MODAL (driver) ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
-.modal-header{padding:18px 22px 14px;border-bottom:1px solid #f0f2f5;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0}
-.modal-header-left{display:flex;flex-direction:column;gap:4px}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:800px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+.modal-header{padding:16px 22px 12px;border-bottom:1px solid #f0f2f5;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0}
 .modal-driver-id{font-size:22px;font-weight:700;color:#111;font-family:monospace}
-.modal-subtitle{font-size:12px;color:#6b7280}
 .modal-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 .modal-stat{background:#f8fafc;border:1px solid #e4e7ed;border-radius:8px;padding:6px 14px;text-align:center}
 .modal-stat-val{font-size:18px;font-weight:700;color:#111}
 .modal-stat-lbl{font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-.modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:#9ca3af;line-height:1;padding:2px 6px;border-radius:6px;flex-shrink:0}
+.modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:#9ca3af;line-height:1;padding:2px 6px;border-radius:6px;flex-shrink:0;align-self:flex-start}
 .modal-close:hover{background:#f3f4f6;color:#374151}
-.modal-search{padding:12px 22px;border-bottom:1px solid #f0f2f5;flex-shrink:0}
+.modal-search{padding:10px 22px;border-bottom:1px solid #f0f2f5;flex-shrink:0}
 .modal-search input{width:100%;height:34px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:13px;outline:none}
 .modal-search input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
-.modal-body{overflow-y:auto;flex:1;padding:0}
-.modal-section-title{font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;padding:14px 22px 8px;background:#fff;position:sticky;top:0;border-bottom:1px solid #f9fafb}
-.modal-type-row{display:flex;align-items:center;gap:10px;padding:8px 22px;border-bottom:1px solid #f9fafb;transition:background .1s}
-.modal-type-row:hover{background:#f9fafb}
-.modal-type-row:last-child{border-bottom:none}
-.modal-type-name{flex:1;font-size:13px;color:#374151;font-weight:500}
-.modal-type-bar-track{width:160px;background:#f3f4f6;border-radius:3px;height:10px;overflow:hidden;flex-shrink:0}
-.modal-type-bar-fill{height:100%;border-radius:3px;transition:width .3s}
-.modal-type-count{font-size:13px;font-weight:700;color:#111;min-width:30px;text-align:right}
-.modal-type-pct{font-size:11px;color:#9ca3af;min-width:36px;text-align:right}
-.modal-incidents-table{width:100%;border-collapse:collapse;font-size:13px}
-.modal-incidents-table thead th{text-align:left;padding:8px 22px;font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid #f0f2f5;background:#fff;position:sticky;top:0}
-.modal-incidents-table tbody tr{border-bottom:1px solid #f9fafb}
-.modal-incidents-table tbody tr:hover{background:#f9fafb}
-.modal-incidents-table tbody td{padding:7px 22px;color:#374151}
-.modal-tabs{display:flex;gap:0;padding:0 22px;border-bottom:1px solid #f0f2f5;flex-shrink:0}
-.modal-tab{padding:10px 16px;font-size:13px;font-weight:600;color:#9ca3af;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
-.modal-tab.active{color:#2563eb;border-bottom-color:#2563eb}
-.modal-tab:hover:not(.active){color:#374151}
-.tab-pane{display:none}
-.tab-pane.active{display:block}
-.no-modal-results{text-align:center;color:#9ca3af;font-size:13px;padding:2rem}
+.modal-body{overflow-y:auto;flex:1}
+.modal-section-title{font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;padding:12px 22px 8px;background:#fff;position:sticky;top:0;border-bottom:1px solid #f9fafb;z-index:2}
 
-@media(max-width:860px){.charts-row{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.modal{max-height:95vh}}
+/* type rows — Level 1 */
+.type-row{display:flex;align-items:center;gap:10px;padding:9px 22px;border-bottom:1px solid #f9fafb;cursor:pointer;transition:background .12s;user-select:none}
+.type-row:hover{background:#f0f7ff}
+.type-row:hover .type-row-name{color:#2563eb}
+.type-row-dblhint{font-size:10px;color:#bfdbfe;margin-left:4px;opacity:0;transition:opacity .15s}
+.type-row:hover .type-row-dblhint{opacity:1}
+.type-row-name{flex:1;font-size:13px;color:#374151;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.type-row-bar-track{width:140px;background:#f3f4f6;border-radius:3px;height:10px;overflow:hidden;flex-shrink:0}
+.type-row-bar-fill{height:100%;border-radius:3px}
+.type-row-count{font-size:13px;font-weight:700;color:#111;min-width:28px;text-align:right}
+.type-row-pct{font-size:11px;color:#9ca3af;min-width:34px;text-align:right}
+.no-results{text-align:center;color:#9ca3af;font-size:13px;padding:2rem}
+
+/* incident list table */
+.inc-table{width:100%;border-collapse:collapse;font-size:13px}
+.inc-table thead th{text-align:left;padding:8px 22px;font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid #f0f2f5;background:#fff;position:sticky;top:0;z-index:2}
+.inc-table tbody tr{border-bottom:1px solid #f9fafb;transition:background .1s}
+.inc-table tbody tr:hover{background:#f9fafb}
+.inc-table tbody td{padding:7px 22px;color:#374151}
+
+/* ── LEVEL 2 MODAL (type detail) ── */
+.modal2-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal2-overlay.open{display:flex}
+.modal2{background:#fff;border-radius:14px;width:100%;max-width:720px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.3);overflow:hidden}
+.modal2-header{padding:16px 22px 12px;border-bottom:1px solid #f0f2f5;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;background:#fff}
+.modal2-breadcrumb{font-size:11px;color:#9ca3af;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.modal2-breadcrumb span{cursor:pointer;color:#2563eb}
+.modal2-breadcrumb span:hover{text-decoration:underline}
+.modal2-title{font-size:18px;font-weight:700;color:#111}
+.modal2-driver-badge{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;margin-top:6px}
+.modal2-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.modal2-stat{background:#f8fafc;border:1px solid #e4e7ed;border-radius:8px;padding:5px 12px;text-align:center}
+.modal2-stat-val{font-size:16px;font-weight:700;color:#111}
+.modal2-stat-lbl{font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.modal2-close{background:none;border:none;cursor:pointer;font-size:22px;color:#9ca3af;line-height:1;padding:2px 6px;border-radius:6px;flex-shrink:0}
+.modal2-close:hover{background:#f3f4f6;color:#374151}
+.modal2-search{padding:10px 22px;border-bottom:1px solid #f0f2f5;flex-shrink:0}
+.modal2-search input{width:100%;height:32px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:13px;outline:none}
+.modal2-search input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.modal2-body{overflow-y:auto;flex:1}
+.modal2-section-title{font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;padding:12px 22px 8px;background:#fff;position:sticky;top:0;border-bottom:1px solid #f9fafb;z-index:2}
+
+@media(max-width:860px){.charts-row{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.modal,.modal2{max-height:95vh}}
 </style>
 </head>
 <body>
@@ -134,34 +154,19 @@ tbody td{padding:8px 10px;color:#374151}
 <div class="main">
 
   <div class="info-bar">
-    ℹ️ Live from GitHub — update <strong>Incidents.csv</strong> in your repo and click <strong>Refresh data</strong>.
-    &nbsp;|&nbsp; 💡 <strong>Double-click any driver row</strong> to drill down into their incidents.
+    ℹ️ Live from GitHub — update <strong>Incidents.csv</strong> and click <strong>Refresh data</strong>.
+    &nbsp;|&nbsp; 💡 <strong>Double-click any driver</strong> → see incident types → <strong>double-click a type</strong> → see every individual incident.
     <span class="last-updated" id="lastUpdated"></span>
   </div>
 
   <div class="filters-panel">
     <div class="filters-title">🔍 Filters</div>
     <div class="filters-row">
-      <div class="fg">
-        <label>Driver ID</label>
-        <input type="text" id="driverFilter" placeholder="e.g. 4268" oninput="applyFilters()">
-      </div>
-      <div class="fg">
-        <label>Incident type</label>
-        <select id="typeFilter" onchange="applyFilters()"><option value="">All types</option></select>
-      </div>
-      <div class="fg">
-        <label>Incident date from</label>
-        <input type="date" id="dateFrom" onchange="applyFilters()">
-      </div>
-      <div class="fg">
-        <label>Incident date to</label>
-        <input type="date" id="dateTo" onchange="applyFilters()">
-      </div>
-      <div class="fg" style="justify-content:flex-end">
-        <label>&nbsp;</label>
-        <button class="btn" onclick="resetFilters()">↺ Reset</button>
-      </div>
+      <div class="fg"><label>Driver ID</label><input type="text" id="driverFilter" placeholder="e.g. 4268" oninput="applyFilters()"></div>
+      <div class="fg"><label>Incident type</label><select id="typeFilter" onchange="applyFilters()"><option value="">All types</option></select></div>
+      <div class="fg"><label>Incident date from</label><input type="date" id="dateFrom" onchange="applyFilters()"></div>
+      <div class="fg"><label>Incident date to</label><input type="date" id="dateTo" onchange="applyFilters()"></div>
+      <div class="fg" style="justify-content:flex-end"><label>&nbsp;</label><button class="btn" onclick="resetFilters()">↺ Reset</button></div>
     </div>
     <div class="active-filters" id="activeFilters"></div>
   </div>
@@ -191,7 +196,9 @@ tbody td{padding:8px 10px;color:#374151}
   </div>
 
   <div class="card">
-    <div class="card-title">📄 Driver summary — top 30 &nbsp;<span style="font-size:11px;font-weight:400;color:#9ca3af">Double-click any row to see full incident breakdown</span></div>
+    <div class="card-title">📄 Driver summary — top 30
+      <span style="font-size:11px;font-weight:400;color:#9ca3af;margin-left:6px">Double-click any row → incident types → double-click type → individual incidents</span>
+    </div>
     <table>
       <thead><tr><th>#</th><th>Driver ID</th><th>Count</th><th>Top type</th><th>2nd type</th><th>3rd type</th></tr></thead>
       <tbody id="tableBody"></tbody>
@@ -202,25 +209,44 @@ tbody td{padding:8px 10px;color:#374151}
 </div>
 </div>
 
-<!-- DRILL-DOWN MODAL -->
+<!-- ══ LEVEL 1 MODAL: Driver → Incident Types ══ -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
-      <div class="modal-header-left">
-        <div style="font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Driver detail</div>
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Driver detail · Level 1 of 2</div>
         <div class="modal-driver-id" id="modalDriverId">—</div>
         <div class="modal-stats" id="modalStats"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
-    </div>
-    <div class="modal-tabs">
-      <div class="modal-tab active" onclick="switchTab('summary')">📊 Type summary</div>
-      <div class="modal-tab" onclick="switchTab('list')">📋 All incidents</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-search">
-      <input type="text" id="modalSearch" placeholder="Search incident types or dates…" oninput="renderModalContent()">
+      <input type="text" id="modalSearch" placeholder="Search incident types…" oninput="renderLevel1()">
     </div>
     <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ══ LEVEL 2 MODAL: Incident Type → Individual Incidents ══ -->
+<div class="modal2-overlay" id="modal2Overlay" onclick="handleOverlay2Click(event)">
+  <div class="modal2" id="modal2">
+    <div class="modal2-header">
+      <div style="flex:1">
+        <div class="modal2-breadcrumb">
+          <span onclick="closeModal2()">Driver <strong id="m2DriverId">—</strong></span>
+          <span style="color:#d1d5db;cursor:default">›</span>
+          <span style="color:#374151;cursor:default" id="m2TypeName">—</span>
+        </div>
+        <div class="modal2-title" id="m2Title">—</div>
+        <div class="modal2-driver-badge">🚛 Driver <span id="m2DriverBadge">—</span></div>
+        <div class="modal2-stats" id="m2Stats"></div>
+      </div>
+      <button class="modal2-close" onclick="closeModal2()">✕</button>
+    </div>
+    <div class="modal2-search">
+      <input type="text" id="modal2Search" placeholder="Search by date, status, cost…" oninput="renderLevel2()">
+    </div>
+    <div class="modal2-body" id="modal2Body"></div>
   </div>
 </div>
 
@@ -229,15 +255,14 @@ tbody td{padding:8px 10px;color:#374151}
 <script>
 const CSV_URL='https://raw.githubusercontent.com/khubaibatta/Safety-Incidents/main/Incidents.csv';
 const TC=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899','#6366f1','#14b8a6','#eab308','#a855f7','#22c55e','#0ea5e9'];
-const PILL_CLS=['pill-r','pill-b','pill-g','pill-a'];
+const PILL=['pill-r','pill-b','pill-g','pill-a'];
 
 let ALL_RECORDS=[], trendChart=null, minYM, maxYM;
-let modalDriver=null, activeTab='summary';
-let currentFiltered=[];
+let modalDriver=null, modal2Type=null;
 
-/* ── LOADING ── */
+/* ── LOAD ── */
 function setLoading(on){
-  const bar=document.getElementById('loadBar'), btn=document.getElementById('refreshBtn');
+  const bar=document.getElementById('loadBar'),btn=document.getElementById('refreshBtn');
   if(on){bar.className='loading-bar-inner indeterminate';btn.disabled=true;btn.textContent='⟳ Loading…';}
   else{bar.className='loading-bar-inner';bar.style.width='100%';setTimeout(()=>{bar.style.width='0';},600);btn.disabled=false;btn.textContent='⟳ Refresh data';}
 }
@@ -246,8 +271,6 @@ function showError(msg){
   document.getElementById('statusMsg').style.display='block';
   document.getElementById('dashboard').style.display='none';
 }
-
-/* ── CSV PARSING ── */
 function parseDate(str){
   if(!str||str==='<null>') return null;
   const p=str.trim().split('/');
@@ -256,14 +279,12 @@ function parseDate(str){
   if(isNaN(d)||isNaN(m)||isNaN(y)||y<2000||y>2030) return null;
   return{year:y,month:m,ym:y*12+(m-1),iso:`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`};
 }
-
 function loadData(){
   setLoading(true);
   document.getElementById('statusMsg').innerHTML='<div class="icon">⏳</div><div>Loading incident data from GitHub…</div>';
   document.getElementById('statusMsg').style.display='block';
   document.getElementById('dashboard').style.display='none';
-  Papa.parse(CSV_URL,{
-    download:true,header:true,skipEmptyLines:true,
+  Papa.parse(CSV_URL,{download:true,header:true,skipEmptyLines:true,
     complete(results){
       try{
         ALL_RECORDS=[];
@@ -272,10 +293,13 @@ function loadData(){
           const driver=(row['DRIVER_ID']||'').trim();
           const type=(row['INCIDENT_TYPE']||'').trim();
           const status=(row['INCIDENT_STATUS']||'').trim();
+          const rootCause=(row['ROOT_CAUSE']||'').trim();
+          const notes=(row['NOTES']||'').trim();
           const cost=parseFloat(row['TOTAL_COST'])||0;
+          const openDays=parseInt(row['OPEN_DAYS'])||0;
           const dateInfo=parseDate(row['INCIDENT_DATE']);
           if(!driver||!type||!dateInfo) return;
-          ALL_RECORDS.push({driver,type,status,cost,ym:dateInfo.ym,year:dateInfo.year,iso:dateInfo.iso});
+          ALL_RECORDS.push({driver,type,status,rootCause,notes,cost,openDays,ym:dateInfo.ym,year:dateInfo.year,iso:dateInfo.iso});
           if(dateInfo.ym<minD) minD=dateInfo.ym;
           if(dateInfo.ym>maxD) maxD=dateInfo.ym;
         });
@@ -301,15 +325,14 @@ function loadData(){
   });
 }
 
-function dateToYM(ds){if(!ds) return null;const d=new Date(ds);return d.getFullYear()*12+d.getMonth();}
-
 /* ── FILTERS ── */
+function dateToYM(ds){if(!ds) return null;const d=new Date(ds);return d.getFullYear()*12+d.getMonth();}
 function applyFilters(){
   const dQ=document.getElementById('driverFilter').value.trim().toLowerCase();
   const tQ=document.getElementById('typeFilter').value;
   const ymFrom=dateToYM(document.getElementById('dateFrom').value);
   const ymTo=dateToYM(document.getElementById('dateTo').value);
-  currentFiltered=ALL_RECORDS.filter(r=>{
+  const filtered=ALL_RECORDS.filter(r=>{
     if(dQ&&!r.driver.toLowerCase().includes(dQ)) return false;
     if(tQ&&r.type!==tQ) return false;
     if(ymFrom!==null&&r.ym<ymFrom) return false;
@@ -317,14 +340,14 @@ function applyFilters(){
     return true;
   });
   const dCounts={};
-  currentFiltered.forEach(r=>{dCounts[r.driver]=(dCounts[r.driver]||0)+1;});
-  const types=new Set(currentFiltered.map(r=>r.type));
+  filtered.forEach(r=>{dCounts[r.driver]=(dCounts[r.driver]||0)+1;});
+  const types=new Set(filtered.map(r=>r.type));
   const topE=Object.entries(dCounts).sort((a,b)=>b[1]-a[1])[0];
-  document.getElementById('mTotal').textContent=currentFiltered.length.toLocaleString();
+  document.getElementById('mTotal').textContent=filtered.length.toLocaleString();
   document.getElementById('mDrivers').textContent=Object.keys(dCounts).length.toLocaleString();
   document.getElementById('mTypes').textContent=types.size;
   document.getElementById('mTop').textContent=topE?topE[0]:'—';
-  document.getElementById('hdrCount').textContent=currentFiltered.length.toLocaleString()+' records';
+  document.getElementById('hdrCount').textContent=filtered.length.toLocaleString()+' records';
   const af=[];
   if(dQ) af.push(['Driver: '+document.getElementById('driverFilter').value,'driverFilter']);
   if(tQ) af.push(['Type: '+tQ,'typeFilter']);
@@ -332,13 +355,12 @@ function applyFilters(){
   const defFrom=`${mnY}-${String(mnM).padStart(2,'0')}-01`;
   if(document.getElementById('dateFrom').value!==defFrom) af.push(['Date filtered','date']);
   document.getElementById('activeFilters').innerHTML=af.map(([l,f])=>`<span class="active-badge" onclick="clearFilter('${f}')">${l} ✕</span>`).join('');
-  renderTrend(currentFiltered);
+  renderTrend(filtered);
   renderDriverBars(dCounts);
-  renderTypeBars(currentFiltered);
-  renderTable(dCounts,currentFiltered);
-  document.getElementById('noResults').style.display=currentFiltered.length===0?'block':'none';
+  renderTypeBars(filtered);
+  renderTable(dCounts,filtered);
+  document.getElementById('noResults').style.display=filtered.length===0?'block':'none';
 }
-
 function clearFilter(f){
   if(f==='driverFilter') document.getElementById('driverFilter').value='';
   else if(f==='typeFilter') document.getElementById('typeFilter').value='';
@@ -350,7 +372,6 @@ function clearFilter(f){
   }
   applyFilters();
 }
-
 function resetFilters(){
   document.getElementById('driverFilter').value='';
   document.getElementById('typeFilter').value='';
@@ -361,7 +382,7 @@ function resetFilters(){
   applyFilters();
 }
 
-/* ── CHARTS & BARS ── */
+/* ── CHARTS ── */
 function renderTrend(filtered){
   const ym={};
   filtered.forEach(r=>{ym[r.year]=(ym[r.year]||0)+1;});
@@ -375,17 +396,15 @@ function renderTrend(filtered){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:i=>'Year '+i[0].label,label:i=>i.raw.toLocaleString()+' incidents'}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'#f3f4f6'},ticks:{font:{size:11}}}}}
   });
 }
-
 function renderDriverBars(dCounts){
   const sorted=Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10);
   const max=sorted.length?sorted[0][1]:1;
   document.getElementById('driverBars').innerHTML=sorted.map(([d,c],i)=>`
-    <div class="bar-row" ondblclick="openModal('${d}')" title="Double-click to drill down into Driver ${d}">
+    <div class="bar-row" ondblclick="openLevel1('${d}')" title="Double-click to drill down into Driver ${d}">
       <div class="bar-label">Driver ${d}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/max*100)}%;background:${i<3?'#dc2626':'#2563eb'}">${c}</div></div>
     </div>`).join('')||'<div class="empty">No data</div>';
 }
-
 function renderTypeBars(filtered){
   const tm={};
   filtered.forEach(r=>{tm[r.type]=(tm[r.type]||0)+1;});
@@ -397,7 +416,6 @@ function renderTypeBars(filtered){
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}">${c}</div></div>
     </div>`).join('')||'<div class="empty">No data</div>';
 }
-
 function renderTable(dCounts,filtered){
   const sorted=Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,30);
   const dTypes={};
@@ -407,27 +425,25 @@ function renderTable(dCounts,filtered){
   });
   document.getElementById('tableBody').innerHTML=sorted.map(([d,c],i)=>{
     const types=Object.entries(dTypes[d]||{}).sort((a,b)=>b[1]-a[1]);
-    const pills=types.slice(0,3).map(([t,n],j)=>`<td><span class="pill ${PILL_CLS[j]}" title="${t}">${t}</span> <span style="color:#9ca3af;font-size:11px">${n}</span></td>`);
+    const pills=types.slice(0,3).map(([t,n],j)=>`<td><span class="pill ${PILL[j]}" title="${t}">${t}</span> <span style="color:#9ca3af;font-size:11px">${n}</span></td>`);
     while(pills.length<3) pills.push('<td style="color:#d1d5db">—</td>');
-    return `<tr class="drillable" ondblclick="openModal('${d}')" title="Double-click to see all incidents for Driver ${d}">
+    return `<tr class="drillable" ondblclick="openLevel1('${d}')" title="Double-click to see incident types for Driver ${d}">
       <td class="rank">${i+1}</td>
-      <td class="drvid">${d} <span style="font-size:10px;color:#bfdbfe;font-weight:400;font-family:sans-serif">dbl-click</span></td>
+      <td class="drvid">${d} <span style="font-size:10px;color:#93c5fd;font-weight:400;font-family:sans-serif">dbl-click</span></td>
       <td><b>${c}</b></td>${pills.join('')}</tr>`;
   }).join('');
 }
 
-/* ── MODAL ── */
-function openModal(driverId){
+/* ══════════════════════════════════════
+   LEVEL 1 MODAL — Driver → Incident Types
+══════════════════════════════════════ */
+function openLevel1(driverId){
   modalDriver=driverId;
-  activeTab='summary';
   document.getElementById('modalDriverId').textContent='Driver '+driverId;
   document.getElementById('modalSearch').value='';
-  // Update tab UI
-  document.querySelectorAll('.modal-tab').forEach((t,i)=>{t.classList.toggle('active',i===0);});
-  // Stats
   const records=ALL_RECORDS.filter(r=>r.driver===driverId);
   const types=new Set(records.map(r=>r.type));
-  const totalCost=records.reduce((s,r)=>s+(r.cost||0),0);
+  const totalCost=records.reduce((s,r)=>s+r.cost,0);
   const years=new Set(records.map(r=>r.year));
   document.getElementById('modalStats').innerHTML=`
     <div class="modal-stat"><div class="modal-stat-val">${records.length}</div><div class="modal-stat-lbl">Total incidents</div></div>
@@ -435,66 +451,96 @@ function openModal(driverId){
     <div class="modal-stat"><div class="modal-stat-val">${years.size}</div><div class="modal-stat-lbl">Years active</div></div>
     ${totalCost>0?`<div class="modal-stat"><div class="modal-stat-val">$${totalCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="modal-stat-lbl">Total cost</div></div>`:''}
   `;
-  renderModalContent();
+  renderLevel1();
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
-
+function renderLevel1(){
+  const q=document.getElementById('modalSearch').value.trim().toLowerCase();
+  const records=ALL_RECORDS.filter(r=>r.driver===modalDriver&&(!q||r.type.toLowerCase().includes(q)));
+  const tm={};
+  records.forEach(r=>{tm[r.type]=(tm[r.type]||0)+1;});
+  const sorted=Object.entries(tm).sort((a,b)=>b[1]-a[1]);
+  const total=ALL_RECORDS.filter(r=>r.driver===modalDriver).length;
+  const max=sorted.length?sorted[0][1]:1;
+  const body=document.getElementById('modalBody');
+  if(!sorted.length){body.innerHTML='<div class="no-results">No types match your search.</div>';return;}
+  body.innerHTML=`
+    <div class="modal-section-title">Incident types (${sorted.length} types · ${total} total) — double-click a row to see individual incidents</div>
+    ${sorted.map(([t,c],i)=>`
+      <div class="type-row" ondblclick="openLevel2('${t.replace(/'/g,"\\'")}')" title="Double-click to see all ${c} '${t}' incidents">
+        <span class="pill ${PILL[i%PILL.length]}" style="flex-shrink:0;max-width:170px" title="${t}">${t}</span>
+        <span class="type-row-name"></span>
+        <div class="type-row-bar-track"><div class="type-row-bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}"></div></div>
+        <span class="type-row-count">${c}</span>
+        <span class="type-row-pct">${Math.round(c/total*100)}%</span>
+        <span class="type-row-dblhint">dbl-click →</span>
+      </div>`).join('')}`;
+}
 function closeModal(){
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow='';
 }
+function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay')) closeModal();}
 
-function handleOverlayClick(e){
-  if(e.target===document.getElementById('modalOverlay')) closeModal();
+/* ══════════════════════════════════════
+   LEVEL 2 MODAL — Incident Type → Individual Incidents
+══════════════════════════════════════ */
+function openLevel2(incidentType){
+  modal2Type=incidentType;
+  document.getElementById('m2DriverId').textContent=modalDriver;
+  document.getElementById('m2DriverBadge').textContent=modalDriver;
+  document.getElementById('m2TypeName').textContent=incidentType;
+  document.getElementById('m2Title').textContent=incidentType;
+  document.getElementById('modal2Search').value='';
+  const records=ALL_RECORDS.filter(r=>r.driver===modalDriver&&r.type===incidentType);
+  const totalCost=records.reduce((s,r)=>s+r.cost,0);
+  const statuses=new Set(records.map(r=>r.status).filter(Boolean));
+  const avgDays=records.length?Math.round(records.reduce((s,r)=>s+r.openDays,0)/records.length):0;
+  document.getElementById('m2Stats').innerHTML=`
+    <div class="modal2-stat"><div class="modal2-stat-val">${records.length}</div><div class="modal2-stat-lbl">Incidents</div></div>
+    ${totalCost>0?`<div class="modal2-stat"><div class="modal2-stat-val">$${totalCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="modal2-stat-lbl">Total cost</div></div>`:''}
+    ${avgDays>0?`<div class="modal2-stat"><div class="modal2-stat-val">${avgDays}</div><div class="modal2-stat-lbl">Avg open days</div></div>`:''}
+    ${statuses.size>0?`<div class="modal2-stat"><div class="modal2-stat-val">${statuses.size}</div><div class="modal2-stat-lbl">Statuses</div></div>`:''}
+  `;
+  renderLevel2();
+  document.getElementById('modal2Overlay').classList.add('open');
 }
-
-function switchTab(tab){
-  activeTab=tab;
-  document.getElementById('modalSearch').value='';
-  document.querySelectorAll('.modal-tab').forEach((t,i)=>{t.classList.toggle('active',(i===0&&tab==='summary')||(i===1&&tab==='list'));});
-  renderModalContent();
-}
-
-function renderModalContent(){
-  const q=document.getElementById('modalSearch').value.trim().toLowerCase();
-  const records=ALL_RECORDS.filter(r=>r.driver===modalDriver&&(!q||(r.type.toLowerCase().includes(q)||r.iso.includes(q)||(r.status||'').toLowerCase().includes(q))));
-  const body=document.getElementById('modalBody');
-
-  if(activeTab==='summary'){
-    const tm={};
-    records.forEach(r=>{tm[r.type]=(tm[r.type]||0)+1;});
-    const sorted=Object.entries(tm).sort((a,b)=>b[1]-a[1]);
-    const max=sorted.length?sorted[0][1]:1;
-    if(!sorted.length){body.innerHTML='<div class="no-modal-results">No incident types match your search.</div>';return;}
-    body.innerHTML=`
-      <div class="modal-section-title">Incident type breakdown (${records.length} total)</div>
-      ${sorted.map(([t,c],i)=>`
-        <div class="modal-type-row">
-          <span class="pill ${PILL_CLS[i%PILL_CLS.length]}" style="margin-right:8px;flex-shrink:0">${t}</span>
-          <span class="modal-type-name"></span>
-          <div class="modal-type-bar-track"><div class="modal-type-bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}"></div></div>
-          <span class="modal-type-count">${c}</span>
-          <span class="modal-type-pct">${Math.round(c/records.length*100)}%</span>
-        </div>`).join('')}`;
-  } else {
-    const sorted=[...records].sort((a,b)=>b.iso.localeCompare(a.iso));
-    if(!sorted.length){body.innerHTML='<div class="no-modal-results">No incidents match your search.</div>';return;}
-    body.innerHTML=`<table class="modal-incidents-table">
-      <thead><tr><th>#</th><th>Date</th><th>Incident type</th><th>Status</th><th>Cost</th></tr></thead>
-      <tbody>${sorted.map((r,i)=>`
+function renderLevel2(){
+  const q=document.getElementById('modal2Search').value.trim().toLowerCase();
+  const records=ALL_RECORDS.filter(r=>
+    r.driver===modalDriver&&r.type===modal2Type&&
+    (!q||(r.iso.includes(q)||(r.status||'').toLowerCase().includes(q)||(r.rootCause||'').toLowerCase().includes(q)||(r.notes||'').toLowerCase().includes(q)||(r.cost>0&&r.cost.toString().includes(q))))
+  ).sort((a,b)=>b.iso.localeCompare(a.iso));
+  const body=document.getElementById('modal2Body');
+  if(!records.length){body.innerHTML='<div class="no-results">No incidents match your search.</div>';return;}
+  body.innerHTML=`
+    <div class="modal2-section-title">${records.length} incident${records.length!==1?'s':''} — sorted newest first</div>
+    <table class="inc-table">
+      <thead><tr><th>#</th><th>Date</th><th>Status</th><th>Root cause</th><th>Cost</th><th>Open days</th></tr></thead>
+      <tbody>${records.map((r,i)=>`
         <tr>
-          <td style="color:#d1d5db;font-size:12px">${i+1}</td>
-          <td style="font-family:monospace;font-size:12px;color:#6b7280">${r.iso}</td>
-          <td><span class="pill ${PILL_CLS[i%PILL_CLS.length]}">${r.type}</span></td>
-          <td style="font-size:12px;color:#6b7280">${r.status||'—'}</td>
-          <td style="font-size:12px;font-family:monospace">${r.cost>0?'$'+r.cost.toLocaleString():'—'}</td>
+          <td style="color:#d1d5db;font-size:12px;width:32px">${i+1}</td>
+          <td style="font-family:monospace;font-size:12px;color:#374151;white-space:nowrap">${r.iso}</td>
+          <td><span class="pill ${r.status==='COMPLETED'?'pill-g':r.status?'pill-b':'pill-r'}" style="max-width:110px">${r.status||'—'}</span></td>
+          <td style="font-size:12px;color:#6b7280;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.rootCause||''}">${r.rootCause||'—'}</td>
+          <td style="font-family:monospace;font-size:12px;white-space:nowrap">${r.cost>0?'<span style="color:#059669;font-weight:600">$'+r.cost.toLocaleString()+'</span>':'—'}</td>
+          <td style="font-size:12px;color:#6b7280;text-align:right">${r.openDays||'—'}</td>
         </tr>`).join('')}
-      </tbody></table>`;
-  }
+      </tbody>
+    </table>`;
 }
+function closeModal2(){
+  document.getElementById('modal2Overlay').classList.remove('open');
+}
+function handleOverlay2Click(e){if(e.target===document.getElementById('modal2Overlay')) closeModal2();}
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('modal2Overlay').classList.contains('open')) closeModal2();
+    else closeModal();
+  }
+});
 loadData();
 </script>
 </body>
