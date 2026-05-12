@@ -244,7 +244,7 @@ tbody td{padding:8px 10px;color:#374151}
       <button class="modal2-close" onclick="closeModal2()">✕</button>
     </div>
     <div class="modal2-search">
-      <input type="text" id="modal2Search" placeholder="Search by date, status, cost…" oninput="renderLevel2()">
+      <input type="text" id="modal2Search" placeholder="Search by ID, date, status, root cause, notes…" oninput="renderLevel2()">
     </div>
     <div class="modal2-body" id="modal2Body"></div>
   </div>
@@ -295,11 +295,12 @@ function loadData(){
           const status=(row['INCIDENT_STATUS']||'').trim();
           const rootCause=(row['ROOT_CAUSE']||'').trim();
           const notes=(row['NOTES']||'').trim();
+          const incidentId=(row['INCIDENT_ID']||'').trim();
           const cost=parseFloat(row['TOTAL_COST'])||0;
           const openDays=parseInt(row['OPEN_DAYS'])||0;
           const dateInfo=parseDate(row['INCIDENT_DATE']);
           if(!driver||!type||!dateInfo) return;
-          ALL_RECORDS.push({driver,type,status,rootCause,notes,cost,openDays,ym:dateInfo.ym,year:dateInfo.year,iso:dateInfo.iso});
+          ALL_RECORDS.push({driver,type,status,rootCause,notes,incidentId,cost,openDays,ym:dateInfo.ym,year:dateInfo.year,iso:dateInfo.iso});
           if(dateInfo.ym<minD) minD=dateInfo.ym;
           if(dateInfo.ym>maxD) maxD=dateInfo.ym;
         });
@@ -434,6 +435,33 @@ function renderTable(dCounts,filtered){
   }).join('');
 }
 
+/* ── Helper: read active dashboard filters ── */
+function getActiveFilters(){
+  const tQ=document.getElementById('typeFilter').value;
+  const ymFrom=dateToYM(document.getElementById('dateFrom').value);
+  const ymTo=dateToYM(document.getElementById('dateTo').value);
+  const dateFromVal=document.getElementById('dateFrom').value;
+  const dateToVal=document.getElementById('dateTo').value;
+  return{tQ,ymFrom,ymTo,dateFromVal,dateToVal};
+}
+function applyDashFilters(records,f){
+  return records.filter(r=>{
+    if(f.tQ&&r.type!==f.tQ) return false;
+    if(f.ymFrom!==null&&r.ym<f.ymFrom) return false;
+    if(f.ymTo!==null&&r.ym>f.ymTo) return false;
+    return true;
+  });
+}
+function filterBannerHTML(f,extraNote=''){
+  const chips=[];
+  if(f.tQ) chips.push(`<span style="background:#fef9c3;color:#854d0e;border:1px solid #fde68a;border-radius:4px;padding:1px 8px;font-size:11px;font-weight:600">Type: ${f.tQ}</span>`);
+  if(f.dateFromVal||f.dateToVal) chips.push(`<span style="background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;border-radius:4px;padding:1px 8px;font-size:11px;font-weight:600">Date: ${f.dateFromVal||'…'} → ${f.dateToVal||'…'}</span>`);
+  if(!chips.length) return '';
+  return `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 22px;background:#fafafa;border-bottom:1px solid #f0f2f5;font-size:11px;color:#6b7280">
+    🔽 Active filters:&nbsp;${chips.join('')}${extraNote?`&nbsp;<span style="color:#9ca3af">${extraNote}</span>`:''}
+  </div>`;
+}
+
 /* ══════════════════════════════════════
    LEVEL 1 MODAL — Driver → Incident Types
 ══════════════════════════════════════ */
@@ -441,14 +469,16 @@ function openLevel1(driverId){
   modalDriver=driverId;
   document.getElementById('modalDriverId').textContent='Driver '+driverId;
   document.getElementById('modalSearch').value='';
-  const records=ALL_RECORDS.filter(r=>r.driver===driverId);
-  const types=new Set(records.map(r=>r.type));
-  const totalCost=records.reduce((s,r)=>s+r.cost,0);
-  const years=new Set(records.map(r=>r.year));
+  const f=getActiveFilters();
+  const allRecords=ALL_RECORDS.filter(r=>r.driver===driverId);
+  const filteredRecords=applyDashFilters(allRecords,f);
+  const types=new Set(filteredRecords.map(r=>r.type));
+  const totalCost=filteredRecords.reduce((s,r)=>s+r.cost,0);
+  const years=new Set(filteredRecords.map(r=>r.year));
   document.getElementById('modalStats').innerHTML=`
-    <div class="modal-stat"><div class="modal-stat-val">${records.length}</div><div class="modal-stat-lbl">Total incidents</div></div>
+    <div class="modal-stat"><div class="modal-stat-val">${filteredRecords.length}</div><div class="modal-stat-lbl">Incidents${allRecords.length!==filteredRecords.length?` <span style="font-size:9px;color:#9ca3af">of ${allRecords.length}</span>`:''}</div></div>
     <div class="modal-stat"><div class="modal-stat-val">${types.size}</div><div class="modal-stat-lbl">Types</div></div>
-    <div class="modal-stat"><div class="modal-stat-val">${years.size}</div><div class="modal-stat-lbl">Years active</div></div>
+    <div class="modal-stat"><div class="modal-stat-val">${years.size}</div><div class="modal-stat-lbl">Years</div></div>
     ${totalCost>0?`<div class="modal-stat"><div class="modal-stat-val">$${totalCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="modal-stat-lbl">Total cost</div></div>`:''}
   `;
   renderLevel1();
@@ -457,18 +487,20 @@ function openLevel1(driverId){
 }
 function renderLevel1(){
   const q=document.getElementById('modalSearch').value.trim().toLowerCase();
-  const records=ALL_RECORDS.filter(r=>r.driver===modalDriver&&(!q||r.type.toLowerCase().includes(q)));
+  const f=getActiveFilters();
+  const baseRecords=applyDashFilters(ALL_RECORDS.filter(r=>r.driver===modalDriver),f);
+  const records=baseRecords.filter(r=>!q||r.type.toLowerCase().includes(q));
   const tm={};
   records.forEach(r=>{tm[r.type]=(tm[r.type]||0)+1;});
   const sorted=Object.entries(tm).sort((a,b)=>b[1]-a[1]);
-  const total=ALL_RECORDS.filter(r=>r.driver===modalDriver).length;
+  const total=baseRecords.length;
   const max=sorted.length?sorted[0][1]:1;
   const body=document.getElementById('modalBody');
-  if(!sorted.length){body.innerHTML='<div class="no-results">No types match your search.</div>';return;}
-  body.innerHTML=`
-    <div class="modal-section-title">Incident types (${sorted.length} types · ${total} total) — double-click a row to see individual incidents</div>
+  if(!sorted.length){body.innerHTML=filterBannerHTML(f)+'<div class="no-results">No types match your filters.</div>';return;}
+  body.innerHTML=filterBannerHTML(f,'Showing only incidents within filtered date range & type.')+`
+    <div class="modal-section-title">Incident types (${sorted.length} type${sorted.length!==1?'s':''} · ${total} incident${total!==1?'s':''}) — double-click a row to see individual incidents</div>
     ${sorted.map(([t,c],i)=>`
-      <div class="type-row" ondblclick="openLevel2('${t.replace(/'/g,"\\'")}')" title="Double-click to see all ${c} '${t}' incidents">
+      <div class="type-row" ondblclick="openLevel2('${t.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')" title="Double-click to see all ${c} '${t}' incidents">
         <span class="pill ${PILL[i%PILL.length]}" style="flex-shrink:0;max-width:170px" title="${t}">${t}</span>
         <span class="type-row-name"></span>
         <div class="type-row-bar-track"><div class="type-row-bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}"></div></div>
@@ -493,12 +525,14 @@ function openLevel2(incidentType){
   document.getElementById('m2TypeName').textContent=incidentType;
   document.getElementById('m2Title').textContent=incidentType;
   document.getElementById('modal2Search').value='';
-  const records=ALL_RECORDS.filter(r=>r.driver===modalDriver&&r.type===incidentType);
+  const f=getActiveFilters();
+  const allRecords=ALL_RECORDS.filter(r=>r.driver===modalDriver&&r.type===incidentType);
+  const records=applyDashFilters(allRecords,f);
   const totalCost=records.reduce((s,r)=>s+r.cost,0);
   const statuses=new Set(records.map(r=>r.status).filter(Boolean));
   const avgDays=records.length?Math.round(records.reduce((s,r)=>s+r.openDays,0)/records.length):0;
   document.getElementById('m2Stats').innerHTML=`
-    <div class="modal2-stat"><div class="modal2-stat-val">${records.length}</div><div class="modal2-stat-lbl">Incidents</div></div>
+    <div class="modal2-stat"><div class="modal2-stat-val">${records.length}</div><div class="modal2-stat-lbl">Incidents${allRecords.length!==records.length?` <span style="font-size:9px;color:#9ca3af">of ${allRecords.length}</span>`:''}</div></div>
     ${totalCost>0?`<div class="modal2-stat"><div class="modal2-stat-val">$${totalCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="modal2-stat-lbl">Total cost</div></div>`:''}
     ${avgDays>0?`<div class="modal2-stat"><div class="modal2-stat-val">${avgDays}</div><div class="modal2-stat-lbl">Avg open days</div></div>`:''}
     ${statuses.size>0?`<div class="modal2-stat"><div class="modal2-stat-val">${statuses.size}</div><div class="modal2-stat-lbl">Statuses</div></div>`:''}
@@ -508,27 +542,32 @@ function openLevel2(incidentType){
 }
 function renderLevel2(){
   const q=document.getElementById('modal2Search').value.trim().toLowerCase();
-  const records=ALL_RECORDS.filter(r=>
-    r.driver===modalDriver&&r.type===modal2Type&&
-    (!q||(r.iso.includes(q)||(r.status||'').toLowerCase().includes(q)||(r.rootCause||'').toLowerCase().includes(q)||(r.notes||'').toLowerCase().includes(q)||(r.cost>0&&r.cost.toString().includes(q))))
-  ).sort((a,b)=>b.iso.localeCompare(a.iso));
+  const f=getActiveFilters();
+  const base=applyDashFilters(ALL_RECORDS.filter(r=>r.driver===modalDriver&&r.type===modal2Type),f);
+  const records=base.filter(r=>!q||(r.iso.includes(q)||(r.status||'').toLowerCase().includes(q)||(r.rootCause||'').toLowerCase().includes(q)||(r.notes||'').toLowerCase().includes(q)||(r.incidentId||'').includes(q)||(r.cost>0&&r.cost.toString().includes(q))))
+    .sort((a,b)=>b.iso.localeCompare(a.iso));
   const body=document.getElementById('modal2Body');
-  if(!records.length){body.innerHTML='<div class="no-results">No incidents match your search.</div>';return;}
-  body.innerHTML=`
+  if(!records.length){body.innerHTML=filterBannerHTML(f)+'<div class="no-results">No incidents match your filters.</div>';return;}
+  body.innerHTML=filterBannerHTML(f)+`
     <div class="modal2-section-title">${records.length} incident${records.length!==1?'s':''} — sorted newest first</div>
-    <table class="inc-table">
-      <thead><tr><th>#</th><th>Date</th><th>Status</th><th>Root cause</th><th>Cost</th><th>Open days</th></tr></thead>
-      <tbody>${records.map((r,i)=>`
-        <tr>
-          <td style="color:#d1d5db;font-size:12px;width:32px">${i+1}</td>
+    <div style="overflow-x:auto">
+    <table class="inc-table" style="min-width:900px">
+      <thead><tr><th style="width:36px">#</th><th style="width:80px">ID</th><th style="width:96px">Date</th><th style="width:110px">Status</th><th style="width:150px">Root cause</th><th style="width:70px">Cost</th><th style="width:72px">Open days</th><th>Notes</th></tr></thead>
+      <tbody>${records.map((r,i)=>{
+        const safeNotes=(r.notes||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        const shortNote=safeNotes.length>120?safeNotes.slice(0,120)+'…':safeNotes;
+        return `<tr>
+          <td style="color:#d1d5db;font-size:12px">${i+1}</td>
+          <td style="font-family:monospace;font-size:12px;font-weight:600;color:#6366f1">${r.incidentId||'—'}</td>
           <td style="font-family:monospace;font-size:12px;color:#374151;white-space:nowrap">${r.iso}</td>
-          <td><span class="pill ${r.status==='COMPLETED'?'pill-g':r.status?'pill-b':'pill-r'}" style="max-width:110px">${r.status||'—'}</span></td>
-          <td style="font-size:12px;color:#6b7280;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.rootCause||''}">${r.rootCause||'—'}</td>
+          <td><span class="pill ${r.status==='COMPLETED'?'pill-g':r.status?'pill-b':'pill-r'}" style="max-width:104px">${r.status||'—'}</span></td>
+          <td style="font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px" title="${(r.rootCause||'').replace(/"/g,'&quot;')}">${r.rootCause||'—'}</td>
           <td style="font-family:monospace;font-size:12px;white-space:nowrap">${r.cost>0?'<span style="color:#059669;font-weight:600">$'+r.cost.toLocaleString()+'</span>':'—'}</td>
-          <td style="font-size:12px;color:#6b7280;text-align:right">${r.openDays||'—'}</td>
-        </tr>`).join('')}
+          <td style="font-size:12px;color:#6b7280;text-align:right;white-space:nowrap">${r.openDays||'—'}</td>
+          <td style="font-size:12px;color:#374151;line-height:1.5">${shortNote?`<span title="${safeNotes}">${shortNote}</span>`:'<span style="color:#d1d5db">—</span>'}</td>
+        </tr>`;}).join('')}
       </tbody>
-    </table>`;
+    </table></div>`;
 }
 function closeModal2(){
   document.getElementById('modal2Overlay').classList.remove('open');
