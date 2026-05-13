@@ -342,17 +342,34 @@ function loadData(){
 }
 
 /* ── FILTERS ── */
-function dateToYM(ds){if(!ds) return null;const d=new Date(ds);return d.getFullYear()*12+d.getMonth();}
+function dateToYM(ds){
+  if(!ds) return null;
+  // Parse YYYY-MM-DD directly to avoid UTC timezone shift
+  const parts=ds.split('-');
+  if(parts.length<2) return null;
+  const y=parseInt(parts[0]),m=parseInt(parts[1])-1;
+  return y*12+m;
+}
+function dateToISO(ds){
+  // Returns comparable YYYY-MM-DD string from date input value
+  return ds||'';
+}
 function applyFilters(){
   const dQ=document.getElementById('driverFilter').value.trim().toLowerCase();
   const tQ=document.getElementById('typeFilter').value;
   const ymFrom=dateToYM(document.getElementById('dateFrom').value);
   const ymTo=dateToYM(document.getElementById('dateTo').value);
+  const dateFromVal=document.getElementById('dateFrom').value;
+  const dateToVal=document.getElementById('dateTo').value;
   const filtered=ALL_RECORDS.filter(r=>{
     if(dQ&&!r.driver.toLowerCase().includes(dQ)) return false;
     if(tQ&&r.type!==tQ) return false;
+    // Compare by YM first, then by exact date for same month
     if(ymFrom!==null&&r.ym<ymFrom) return false;
     if(ymTo!==null&&r.ym>ymTo) return false;
+    // Exact day comparison within boundary months
+    if(ymFrom!==null&&r.ym===ymFrom&&r.iso<dateFromVal) return false;
+    if(ymTo!==null&&r.ym===ymTo&&r.iso>dateToVal) return false;
     return true;
   });
   const dCounts={};
@@ -468,6 +485,8 @@ function applyDashFilters(records,f){
     if(f.tQ&&r.type!==f.tQ) return false;
     if(f.ymFrom!==null&&r.ym<f.ymFrom) return false;
     if(f.ymTo!==null&&r.ym>f.ymTo) return false;
+    if(f.ymFrom!==null&&r.ym===f.ymFrom&&f.dateFromVal&&r.iso<f.dateFromVal) return false;
+    if(f.ymTo!==null&&r.ym===f.ymTo&&f.dateToVal&&r.iso>f.dateToVal) return false;
     return true;
   });
 }
