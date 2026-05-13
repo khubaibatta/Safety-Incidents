@@ -188,6 +188,7 @@ tbody td{padding:8px 10px;color:#374151}
     <div class="card">
       <div class="card-title">📋 Top 15 incident types</div>
       <div id="typeBars"></div>
+      <div class="dbl-hint">Double-click a bar to drill down</div>
     </div>
   </div>
 
@@ -246,6 +247,24 @@ tbody td{padding:8px 10px;color:#374151}
   </div>
 </div>
 
+<!-- ══ TYPE MODAL: Incident Type → Drivers ══ -->
+<div class="modal-overlay" id="typeModalOverlay" onclick="handleTypeOverlayClick(event)" style="z-index:900">
+  <div class="modal" id="typeModal">
+    <div class="modal-header">
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Incident type detail — double-click a driver to see their incidents</div>
+        <div class="modal-driver-id" id="typeModalTitle" style="font-family:sans-serif;font-size:20px">—</div>
+        <div class="modal-stats" id="typeModalStats"></div>
+      </div>
+      <button class="modal-close" onclick="closeTypeModal()">✕</button>
+    </div>
+    <div class="modal-search">
+      <input type="text" id="typeModalSearch" placeholder="Search driver ID…" oninput="renderTypeModal()">
+    </div>
+    <div class="modal-body" id="typeModalBody"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
@@ -254,7 +273,7 @@ const TC=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316',
 const PILL=['pill-r','pill-b','pill-g','pill-a'];
 
 let ALL_RECORDS=[], trendChart=null, minYM, maxYM;
-let modalDriver=null, modal2Type=null;
+let modalDriver=null, modal2Type=null, typeModalType=null;
 
 /* ── LOAD ── */
 function setLoading(on){
@@ -408,7 +427,7 @@ function renderTypeBars(filtered){
   const sorted=Object.entries(tm).sort((a,b)=>b[1]-a[1]).slice(0,15);
   const max=sorted.length?sorted[0][1]:1;
   document.getElementById('typeBars').innerHTML=sorted.map(([t,c],i)=>`
-    <div class="bar-row">
+    <div class="bar-row" ondblclick="openTypeModal('${t.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')" title="Double-click to drill into: ${t}">
       <div class="bar-label" title="${t}">${t}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}">${c}</div></div>
     </div>`).join('')||'<div class="empty">No data</div>';
@@ -512,6 +531,67 @@ function closeModal(){
 function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay')) closeModal();}
 
 /* ══════════════════════════════════════
+   TYPE MODAL — Incident Type → Drivers
+══════════════════════════════════════ */
+function openTypeModal(incidentType){
+  typeModalType=incidentType;
+  document.getElementById('typeModalTitle').textContent=incidentType;
+  document.getElementById('typeModalSearch').value='';
+  const f=getActiveFilters();
+  const allRecords=ALL_RECORDS.filter(r=>r.type===incidentType);
+  const filtered=applyDashFilters(allRecords,{...f,tQ:''});
+  const drivers=new Set(filtered.map(r=>r.driver));
+  const totalCost=filtered.reduce((s,r)=>s+r.cost,0);
+  const years=new Set(filtered.map(r=>r.year));
+  document.getElementById('typeModalStats').innerHTML=`
+    <div class="modal-stat"><div class="modal-stat-val">${filtered.length}</div><div class="modal-stat-lbl">Incidents${allRecords.length!==filtered.length?` <span style="font-size:9px;color:#9ca3af">of ${allRecords.length}</span>`:''}</div></div>
+    <div class="modal-stat"><div class="modal-stat-val">${drivers.size}</div><div class="modal-stat-lbl">Drivers</div></div>
+    <div class="modal-stat"><div class="modal-stat-val">${years.size}</div><div class="modal-stat-lbl">Years</div></div>
+    ${totalCost>0?`<div class="modal-stat"><div class="modal-stat-val">$${totalCost.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="modal-stat-lbl">Total cost</div></div>`:''}
+  `;
+  renderTypeModal();
+  document.getElementById('typeModalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function renderTypeModal(){
+  const q=document.getElementById('typeModalSearch').value.trim().toLowerCase();
+  const f=getActiveFilters();
+  const base=applyDashFilters(ALL_RECORDS.filter(r=>r.type===typeModalType),{...f,tQ:''});
+  const dCounts={};
+  base.forEach(r=>{dCounts[r.driver]=(dCounts[r.driver]||0)+1;});
+  const sorted=Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).filter(([d])=>!q||d.toLowerCase().includes(q));
+  const total=base.length;
+  const max=sorted.length?sorted[0][1]:1;
+  const body=document.getElementById('typeModalBody');
+  if(!sorted.length){body.innerHTML=filterBannerHTML(f)+'<div class="no-results">No drivers match.</div>';return;}
+  body.innerHTML=filterBannerHTML({...f,tQ:''})+`
+    <div class="modal-section-title">${sorted.length} driver${sorted.length!==1?'s':''} · ${total} incident${total!==1?'s':''} — double-click a driver to see their individual incidents</div>
+    ${sorted.map(([d,c],i)=>`
+      <div class="type-row" ondblclick="openLevel2FromType('${typeModalType.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}','${d}')" title="Double-click to see ${c} incidents for Driver ${d}">
+        <span style="font-family:monospace;font-weight:700;font-size:13px;color:#111;width:80px;flex-shrink:0">Driver ${d}</span>
+        <span class="type-row-name"></span>
+        <div class="type-row-bar-track"><div class="type-row-bar-fill" style="width:${Math.round(c/max*100)}%;background:${TC[i%TC.length]}"></div></div>
+        <span class="type-row-count">${c}</span>
+        <span class="type-row-pct">${Math.round(c/total*100)}%</span>
+        <span class="type-row-dblhint">dbl-click →</span>
+      </div>`).join('')}`;
+}
+function closeTypeModal(){
+  document.getElementById('typeModalOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function handleTypeOverlayClick(e){if(e.target===document.getElementById('typeModalOverlay')) closeTypeModal();}
+
+/* Opens Level2 from the Type modal (sets modalDriver then opens Level2) */
+function openLevel2FromType(incidentType, driverId){
+  modalDriver=driverId;
+  openLevel2(incidentType);
+  /* Update breadcrumb to show type → driver context */
+  document.getElementById('m2DriverId').textContent=driverId;
+  document.getElementById('m2DriverBadge').textContent=driverId;
+}
+
+/* ══════════════════════════════════════
    LEVEL 2 MODAL — Incident Type → Individual Incidents
 ══════════════════════════════════════ */
 function openLevel2(incidentType){
@@ -573,7 +653,8 @@ function handleOverlay2Click(e){if(e.target===document.getElementById('modal2Ove
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('modal2Overlay').classList.contains('open')) closeModal2();
-    else closeModal();
+    else if(document.getElementById('modalOverlay').classList.contains('open')) closeModal();
+    else if(document.getElementById('typeModalOverlay').classList.contains('open')) closeTypeModal();
   }
 });
 loadData();
